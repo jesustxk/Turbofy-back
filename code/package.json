@@ -2,14 +2,26 @@
   "name": "code",
   "version": "1.0.0",
   "description": "Backend for Turbofy",
-  "main": "index.js",
+  "main": "src/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/main",
+    "test": "jest",
+    "test-jenkins": "jest --reporters=default --reporters=jest-junit",
+    "coverage-jenkins": "jest --reporters=default --reporters=jest-junit --coverage --coverageReporters=text --coverageReporters=html --coverageDirectory=./coverage/"
+  },
+  "jest-junit": {
+    "outputDirectory": "./coverage/",
+    "outputName": "test.results.xml",
+    "usePathForSuiteName": "true"
   },
   "author": "Jesustxk",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
     "mongoose": "^7.2.2"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "jest-junit": "^16.0.0"
   }
 }
