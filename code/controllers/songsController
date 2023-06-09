@@ -1,0 +1,79 @@
+const mongoose = require('mongoose');
+const Song = mongoose.model('Song');
+
+const sendJSONresponse = (res, status, content) => {
+    res.status(status);
+    res.json(content);
+};
+
+// POST /songs/create
+const createSong = (req, res) => {
+
+};
+
+
+// GET /songs/read
+const readSong = (req, res) => {
+
+};
+
+
+// GET /songs/readAll
+const readAllSongs = (req, res) => {
+
+};
+
+
+// POST /songs/update
+const updateSong = (req, res) => {
+
+};
+
+
+// POST /songs/delete
+const deleteSong = (req, res) => {
+
+};
+
+
+// POST /comments/create
+const createComment = (req, res) => {
+
+};
+
+
+// POST /comments/read
+const readComment = (req, res) => {
+
+};
+
+
+// POST /comments/readSong
+const readSongComments = (req, res) => {
+
+};
+
+
+// POST /comments/update
+const updateComment = (req, res) => {
+
+};
+
+
+// POST /comments/delete
+const deleteComment = (req, res) => {
+
+};
+
+module.exports = {
+    createSong,
+    readSong,
+    readAllSongs,
+    updateSong,
+    deleteSong,
+    createComment,
+    readComment,
+    readSongComments,
+    updateComment,
+    deleteComment
+  };
