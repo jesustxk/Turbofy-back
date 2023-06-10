@@ -42,13 +42,13 @@ const createComment = (req, res) => {
 };
 
 
-// POST /comments/read
+// GET /comments/read
 const readComment = (req, res) => {
 
 };
 
 
-// POST /comments/readSong
+// GET /comments/readSong
 const readSongComments = (req, res) => {
 
 };
