@@ -7,7 +7,7 @@ const sendJSONresponse = (res, status, content) => {
 };
 
 // POST /songs/create
-const createSong = (req, res) => {
+const createSong = async (req, res) => {
 
 };
 
@@ -76,4 +76,4 @@ module.exports = {
     readSongComments,
     updateComment,
     deleteComment
-  };
+};
