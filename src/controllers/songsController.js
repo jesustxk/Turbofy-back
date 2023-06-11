@@ -58,7 +58,6 @@ const readAllSongs = (req, res) => {
 
 // GET /songs/search
 const readSongsByFilter = (req, res) => {
-
     let filter = '{';
 
     if (req.params.name) {

@@ -3,14 +3,14 @@ const express = require('express');
 require('./models/database');
 
 const songsRouter = require('./routes/songsRoutes');
-const commentsRoutes = require('./routes/commentsRoutes');
+const commentsRouter = require('./routes/commentsRoutes');
 
 const turbofy = express();
 
 // Rutas
 turbofy.use(express.json());
 turbofy.use('/songs', songsRouter);
-turbofy.use('/comments', commentsRoutes);
+turbofy.use('/comments', commentsRouter);
 
 // catch 404 and forward to error handler
 turbofy.use(function(req, res, next) {

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const dbURI = 'mongodb://localhost:27017/turbofy-db';
+const dbURI = 'mongodb://127.0.0.1:27017/turbofy-db';
 mongoose.connect(dbURI, { useUnifiedTopology: true,  useNewUrlParser: true });
 
 // CONNECTION EVENTS
