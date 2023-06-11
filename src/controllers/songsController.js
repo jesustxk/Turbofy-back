@@ -9,16 +9,16 @@ const sendJSONresponse = (res, status, content) => {
 
 // POST /songs/create
 const createSong = async (req, res) => {
-    console.log('createSong');
+    console.log('POST -- createSong');
 
     Song.create({
         name: req.body.name,
-        artist: req.body.name,
+        artist: req.body.artist,
         image: req.body.image,
         genre: req.body.genre,
         duration: req.body.duration,
         geolocation: req.body.geolocation
-    }, (err, song) => {
+    }).then((err, song) => {
         if (err) {
             sendJSONresponse(res, 404, err);
         } else {
@@ -30,7 +30,7 @@ const createSong = async (req, res) => {
 
 // GET /songs/read
 const readSong = async (req, res) => {
-    console.log('readSong');
+    console.log('GET -- readSong');
 
     Song.findById(req.params.songId)
         .then((err, song) => {
@@ -47,7 +47,7 @@ const readSong = async (req, res) => {
 
 // GET /songs/readAll
 const readAllSongs = async (req, res) => {
-    console.log('readAllSongs');
+    console.log('GET -- readAllSongs');
     
     Song.find({})
         .then((err, songs) => {
@@ -64,7 +64,7 @@ const readAllSongs = async (req, res) => {
 
 // GET /songs/search
 const readSongsByFilter = async (req, res) => {
-    console.log('readSongsByFilter');
+    console.log('GET -- readSongsByFilter');
 
     let filter = '{';
 
@@ -93,7 +93,7 @@ const readSongsByFilter = async (req, res) => {
 
 // POST /songs/update
 const updateSong = async (req, res) => {
-    console.log('updateSong');
+    console.log('POST -- updateSong');
 
     if (!req.params.songId) {
         sendJSONresponse(res, 404, { "message": "Se debe indicar la canción a actualizar" });
@@ -126,9 +126,9 @@ const updateSong = async (req, res) => {
 };
 
 
-// POST /songs/delete
+// DELETE /songs/delete
 const deleteSong = async (req, res) => {
-    console.log('deleteSong');
+    console.log('DELETE -- deleteSong');
 
     if (req.params.songId) {
         Song.findByIdAndRemove(req.params.songId)

@@ -8,6 +8,8 @@ const sendJSONresponse = (res, status, content) => {
 
 // POST /comments/create
 const createComment = (req, res) => {
+    console.log('POST -- createComment');
+
     if (req.params.songId) {
         Song.findById(req.params.songId)
             .select('comments')
@@ -44,8 +46,10 @@ const addComment = (req, res, song) => {
 };
 
 
-// POST /comments/delete
+// DELETE /comments/delete
 const deleteComment = (req, res) => {
+    console.log('DELETE -- deleteComment');
+
     if (!req.params.songId || req.params.commentId) {
         sendJSONresponse(res, 404, {"message": "Se debe indicar el comentario a borrar"});
     }
