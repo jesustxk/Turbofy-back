@@ -8,13 +8,13 @@ const sendJSONresponse = (res, status, content) => {
 // GET /songs/spoty/read
 const readSpotySong = async (req, res) => {
     try {
-        const songs = getSongs(req, res);
+        const songs = await getSongs(req, res);
         sendJSONresponse(res, 200, songs);
     } catch (error) {
 
         if (error.response.status === 401) {
             console.log('Token invalido, se solicita uno nuevo y se reintenta la llamada a la API')
-            updateToken();
+            await updateToken();
         } else {
             sendJSONresponse(res, error.response.status, { 'message': 'Error al tratar de obtener el listado de canciones, inténtelo de nuevo' });
         }
@@ -53,7 +53,7 @@ const updateToken = async (req, res) => {
 
     // Recuperamos las canciones
     try {
-        const songs = getSongs(req, res);
+        const songs = await getSongs(req, res);
         sendJSONresponse(res, 200, songs);
     } catch (error) {
         sendJSONresponse(res, error.response.status, { 'message': 'Error al tratar de obtener el listado de canciones, inténtelo de nuevo' });

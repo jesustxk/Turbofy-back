@@ -13,10 +13,12 @@ const songSchema = new mongoose.Schema({
     artist: String,
     date: {type: Date, "default": Date.now},
     image: {url: String, imageBase64String: String},
-    comments: [commentSchema],
     genre: String,
     duration: Number,
-    geolocation: {latitude: Number, longitude: Number}
+    geolocation: {latitude: Number, longitude: Number},
+    comments: [commentSchema],
 });
+
+songSchema.index({ name: String, artist: String}, {unique: true})
 
 mongoose.model('Song', songSchema);
