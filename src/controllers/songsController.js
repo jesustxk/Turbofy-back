@@ -9,6 +9,8 @@ const sendJSONresponse = (res, status, content) => {
 
 // POST /songs/create
 const createSong = async (req, res) => {
+    console.log('createSong');
+
     Song.create({
         name: req.body.name,
         artist: req.body.name,
@@ -27,9 +29,11 @@ const createSong = async (req, res) => {
 
 
 // GET /songs/read
-const readSong = (req, res) => {
+const readSong = async (req, res) => {
+    console.log('readSong');
+
     Song.findById(req.params.songId)
-        .exec((err, song) => {
+        .then((err, song) => {
             if (!song) {
                 sendJSONresponse(res, 404, { "message": "Canción no encontrada" });
             } else if (err) {
@@ -42,9 +46,11 @@ const readSong = (req, res) => {
 
 
 // GET /songs/readAll
-const readAllSongs = (req, res) => {
+const readAllSongs = async (req, res) => {
+    console.log('readAllSongs');
+    
     Song.find({})
-        .exec((err, songs) => {
+        .then((err, songs) => {
             if (!songs) {
                 sendJSONresponse(res, 404, { "message": "No se han encontrado canciones" });
             } else if (err) {
@@ -57,7 +63,9 @@ const readAllSongs = (req, res) => {
 
 
 // GET /songs/search
-const readSongsByFilter = (req, res) => {
+const readSongsByFilter = async (req, res) => {
+    console.log('readSongsByFilter');
+
     let filter = '{';
 
     if (req.params.name) {
@@ -71,7 +79,7 @@ const readSongsByFilter = (req, res) => {
     filter += '}';
 
     Song.find(JSON.parse(filter))
-        .exec((err, songs) => {
+        .then((err, songs) => {
             if (!songs) {
                 sendJSONresponse(res, 404, { "message": "No se han encontrado canciones" });
             } else if (err) {
@@ -84,14 +92,16 @@ const readSongsByFilter = (req, res) => {
 
 
 // POST /songs/update
-const updateSong = (req, res) => {
+const updateSong = async (req, res) => {
+    console.log('updateSong');
+
     if (!req.params.songId) {
         sendJSONresponse(res, 404, { "message": "Se debe indicar la canción a actualizar" });
     }
 
     Song.findById(req.params.songId)
         .select('-comments')
-        .exec((err, song) => {
+        .then((err, song) => {
             if (!song) {
                 sendJSONresponse(res, 404, { "message": "Canción no encontrada" });
             } else if (err) {
@@ -117,10 +127,12 @@ const updateSong = (req, res) => {
 
 
 // POST /songs/delete
-const deleteSong = (req, res) => {
+const deleteSong = async (req, res) => {
+    console.log('deleteSong');
+
     if (req.params.songId) {
         Song.findByIdAndRemove(req.params.songId)
-            .exec((err, song) => {
+            .then((err, song) => {
                 if (err) {
                     sendJSONresponse(res, 404, err);
                 }

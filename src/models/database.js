@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
 
-const dbURI = 'mongodb://127.0.0.1:27017/turbofy-db';
+const dbURI = process.env.DB_URI;
 mongoose.connect(dbURI, { useUnifiedTopology: true,  useNewUrlParser: true });
 
 // CONNECTION EVENTS

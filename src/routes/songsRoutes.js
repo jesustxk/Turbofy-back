@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const songsController = require('../controllers/songsController');
 const spotyController = require('../controllers/spotyController');
-const commentsController = require('../controllers/commentsController');
 
 // SONGS
 router.post('/songs/create', songsController.createSong);
@@ -11,10 +10,6 @@ router.get('/songs/readAll', songsController.readAllSongs);
 router.get('songs/search', songsController.readSongsByFilter);
 router.post('/songs/update', songsController.updateSong);
 router.delete('/songs/delete', songsController.deleteSong);
-
-// COMMENTS
-router.post('/comments/read', commentsController.createComment);
-router.delete('/comments/delete', commentsController.deleteComment);
 
 // SEARCH SONGS SPOTIFY
 router.get('/songs/spoty/read', spotyController.readSpotySong);

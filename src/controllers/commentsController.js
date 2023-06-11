@@ -11,7 +11,7 @@ const createComment = (req, res) => {
     if (req.params.songId) {
         Song.findById(req.params.songId)
             .select('comments')
-            .exec((err, song) => {
+            .then((err, song) => {
                 if (err) {
                     sendJSONresponse(res, 400, err);
                 } else {
@@ -52,7 +52,7 @@ const deleteComment = (req, res) => {
 
     Song.findById(req.params.songId)
         .select('comments')
-        .exec((err, song) => {
+        .then((err, song) => {
             if (!song) {
                 sendJSONresponse(res, 404, {"message": "Canción no encontrada"});
             } else if (err) {
