@@ -58,7 +58,20 @@ const readAllSongs = (req, res) => {
 
 // GET /songs/search
 const readSongsByFilter = (req, res) => {
-    Song.find({ name: req.params.name, artist: req.params.artist, date: req.params.date })
+
+    let filter = '{';
+
+    if (req.params.name) {
+        filter += 'name: ' + req.params.name + ', ';
+    } else if (req.params.artist) {
+        filter += 'artist: ' + req.params.artist + ', ';
+    } else if (req.params.date) {
+        filter += 'date: ' + req.params.date;
+    }
+    
+    filter += '}';
+
+    Song.find(JSON.parse(filter))
         .exec((err, songs) => {
             if (!songs) {
                 sendJSONresponse(res, 404, { "message": "No se han encontrado canciones" });
