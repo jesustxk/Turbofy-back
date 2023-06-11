@@ -11,19 +11,18 @@ const sendJSONresponse = (res, status, content) => {
 const createSong = async (req, res) => {
     console.log('POST -- createSong');
 
-    Song.create({
+    const song = mongoose.model('Song')({
         name: req.body.name,
         artist: req.body.artist,
         image: req.body.image,
         genre: req.body.genre,
         duration: req.body.duration,
         geolocation: req.body.geolocation
-    }).then((err, song) => {
-        if (err) {
-            sendJSONresponse(res, 404, err);
-        } else {
-            sendJSONresponse(res, 201, song);
-        }
+    });
+
+    song.save()
+        .then((song) => { sendJSONresponse(res, 200, song); })
+        .catch((err) => { sendJSONresponse(res, 400, { "message": "La canción ya existe o no se ha podido crear" });
     });
 };
 
@@ -32,16 +31,16 @@ const createSong = async (req, res) => {
 const readSong = async (req, res) => {
     console.log('GET -- readSong');
 
-    Song.findById(req.params.songId)
-        .then((err, song) => {
-            if (!song) {
-                sendJSONresponse(res, 404, { "message": "Canción no encontrada" });
-            } else if (err) {
-                sendJSONresponse(res, 404, err);
-            } else {
-                sendJSONresponse(res, 200, song);
-            }
-        });
+    try {
+        const song = await Song.findById(req.query.songId);
+        if (!song) {
+            sendJSONresponse(res, 404, { "message": "Canción no encontrada" });
+        } 
+
+        sendJSONresponse(res, 200, song);
+    } catch (err) {
+        sendJSONresponse(res, 500, err);
+    }
 };
 
 
@@ -49,16 +48,17 @@ const readSong = async (req, res) => {
 const readAllSongs = async (req, res) => {
     console.log('GET -- readAllSongs');
     
-    Song.find({})
-        .then((err, songs) => {
-            if (!songs) {
-                sendJSONresponse(res, 404, { "message": "No se han encontrado canciones" });
-            } else if (err) {
-                sendJSONresponse(res, 404, err);
-            } else {
-                sendJSONresponse(res, 200, songs);
-            }
-        });
+    try {
+        const songs = await Song.find({});
+
+        if (!songs) {
+            sendJSONresponse(res, 404, { "message": "No se han encontrado canciones" });
+        }
+        
+        sendJSONresponse(res, 200, songs);
+    } catch (err) {
+        sendJSONresponse(res, 500, err);
+    }
 };
 
 
@@ -66,28 +66,26 @@ const readAllSongs = async (req, res) => {
 const readSongsByFilter = async (req, res) => {
     console.log('GET -- readSongsByFilter');
 
-    let filter = '{';
+    let filter = {};
 
-    if (req.params.name) {
-        filter += 'name: ' + req.params.name + ', ';
-    } else if (req.params.artist) {
-        filter += 'artist: ' + req.params.artist + ', ';
-    } else if (req.params.date) {
-        filter += 'date: ' + req.params.date;
+    if (req.query.name) {
+        filter.name = req.query.name;
+    } else if (req.query.artist) {
+        filter.artist = req.query.artist;
+    } else if (req.query.date) {
+        filter.date = req.query.date;
     }
-    
-    filter += '}';
 
-    Song.find(JSON.parse(filter))
-        .then((err, songs) => {
-            if (!songs) {
-                sendJSONresponse(res, 404, { "message": "No se han encontrado canciones" });
-            } else if (err) {
-                sendJSONresponse(res, 404, err);
-            } else {
-                sendJSONresponse(res, 200, songs);
-            }
-        });
+    try {
+        const songs = await Song.find(filter);
+
+        if (!songs) {
+            sendJSONresponse(res, 404, { "message": "No se han encontrado canciones" });
+        }
+        sendJSONresponse(res, 200, songs);
+    } catch (err) {
+        sendJSONresponse(res, 500, err);
+    }
 }
 
 
@@ -95,34 +93,28 @@ const readSongsByFilter = async (req, res) => {
 const updateSong = async (req, res) => {
     console.log('POST -- updateSong');
 
-    if (!req.params.songId) {
-        sendJSONresponse(res, 404, { "message": "Se debe indicar la canción a actualizar" });
+    try {
+        if (!req.query.songId) {
+            sendJSONresponse(res, 404, { "message": "Se debe indicar la canción a actualizar" });
+        }
+
+        const song = await Song.findById(req.query.songId).select('-comments');
+
+        if (!song) {
+            sendJSONresponse(res, 404, { "message": "Canción no encontrada" });
+        }
+
+        song.name = req.body.name;
+        song.artist = req.body.artist;
+        song.image = req.body.image;
+        song.genre = req.body.genre;
+        song.duration = req.body.duration;
+        song.geolocation = req.body.geolocation;
+
+        song.save().then((song) => { sendJSONresponse(res, 200, song);});
+    } catch (err) {
+        sendJSONresponse(res, 500, err);
     }
-
-    Song.findById(req.params.songId)
-        .select('-comments')
-        .then((err, song) => {
-            if (!song) {
-                sendJSONresponse(res, 404, { "message": "Canción no encontrada" });
-            } else if (err) {
-                sendJSONresponse(res, 400, err);
-            }
-
-            song.name = req.body.name;
-            song.artist = req.body.name;
-            song.image = req.body.image;
-            song.genre = req.body.genre;
-            song.duration = req.body.duration;
-            song.geolocation = req.body.geolocation;
-
-            song.save((err, song) => {
-                if (err) {
-                    sendJSONresponse(res, 404, err);
-                } else {
-                    sendJSONresponse(res, 200, song);
-                }
-            });
-        });
 };
 
 
@@ -130,18 +122,23 @@ const updateSong = async (req, res) => {
 const deleteSong = async (req, res) => {
     console.log('DELETE -- deleteSong');
 
-    if (req.params.songId) {
-        Song.findByIdAndRemove(req.params.songId)
-            .then((err, song) => {
-                if (err) {
-                    sendJSONresponse(res, 404, err);
-                }
-                console.log('Se elimina la canción ' + songId);
-                sendJSONresponse(res, 200, null);
-            });
-    } else {
-        sendJSONresponse(res, 404, { 'message': 'No se encuentra la canción' });
+    if (!req.query.songId) {
+        sendJSONresponse(res, 404, { 'message': 'Se debe indicar la canción a eliminar' });
     }
+
+    try {
+        Song.findByIdAndRemove(req.query.songId).then((song) => {
+            if (song !== null) {
+                console.log('Se elimina la canción ' + song);
+                sendJSONresponse(res, 200, { 'message': 'Canción eliminada' });
+            } else {
+                sendJSONresponse(res, 404, { 'message': 'Canción no encontrada' });
+            }
+        });
+    } catch (err) {
+        sendJSONresponse(res, 500, err);
+    }
+        
 };
 
 

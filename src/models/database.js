@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const dbURI = process.env.DB_URI;
-mongoose.connect(dbURI, { useUnifiedTopology: true,  useNewUrlParser: true });
+mongoose.connect(dbURI, { useUnifiedTopology: true,  useNewUrlParser: true, autoIndex: true });
 
 // CONNECTION EVENTS
 mongoose.connection.on('connected', () => {
@@ -18,7 +18,7 @@ mongoose.connection.on('disconnected', () => {
 // CAPTURE APP TERMINATION / RESTART EVENTS
 // To be called when process is restarted or terminated
 const gracefulShutdown = (msg, callback) => {
-    mongoose.connection.close( () => {
+    mongoose.connection.close().then(() => {
         console.log('Mongoose disconnected through ' + msg);
         callback();
     });

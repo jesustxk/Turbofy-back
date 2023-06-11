@@ -2,9 +2,9 @@
   "name": "code",
   "version": "1.0.0",
   "description": "Backend for Turbofy",
-  "main": "src/main.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "node src/main",
+    "start": "node src/app",
     "test": "jest",
     "test-jenkins": "jest --reporters=default --reporters=jest-junit",
     "coverage-jenkins": "jest --reporters=default --reporters=jest-junit --coverage --coverageReporters=text --coverageReporters=html --coverageDirectory=./coverage/"

@@ -19,6 +19,6 @@ const songSchema = new mongoose.Schema({
     comments: [commentSchema],
 });
 
-songSchema.index({ name: String, artist: String}, {unique: true})
+songSchema.index({ name: 1, artist: 1}, { unique: true })
 
 mongoose.model('Song', songSchema);
