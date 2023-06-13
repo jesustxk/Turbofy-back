@@ -9,7 +9,7 @@ const app = express();
 
 // Rutas
 app.use(express.json());
-app.use('/', songsRouter);
+app.use('/', [songsRouter, commentsRouter]);
 app.use('/songs', songsRouter);
 app.use('/comments', commentsRouter);
 

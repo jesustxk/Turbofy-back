@@ -7,19 +7,18 @@ const sendJSONresponse = (res, status, content) => {
 };
 
 // POST /comments/create
-const createComment = (req, res) => {
+const createComment = async (req, res) => {
     console.log('POST -- createComment');
-
-    if (req.params.songId) {
-        Song.findById(req.params.songId)
-            .select('comments')
-            .then((err, song) => {
-                if (err) {
-                    sendJSONresponse(res, 400, err);
-                } else {
-                    addComment(req, res, song);
-                }
-            });
+    
+    if (req.query.songId) {
+        try {
+            const song = await Song.findById(req.query.songId);
+            console.log(song);
+            
+            addComment(req, res, song);
+        } catch (err) {
+            sendJSONresponse(res, 400, { "message": "No ha sido posible crear el comentario" });
+        }
     } else {
         sendJSONresponse(res, 404, { "message": "Canción no encontrada" });
     }
@@ -35,19 +34,14 @@ const addComment = (req, res, song) => {
             rating: req.body.rating,
             geolocation: req.body.geolocation
         });
-        song.save((err, song) => {
-            if (err) {
-                sendJSONresponse(res, 400, err);
-            } else {
-                sendJSONresponse(res, 201, song);
-            }
-        })
+
+        song.save().then((song) => { sendJSONresponse(res, 200, song);});
     }
 };
 
 
 // DELETE /comments/delete
-const deleteComment = (req, res) => {
+const deleteComment = async (req, res) => {
     console.log('DELETE -- deleteComment');
 
     if (!req.params.songId || req.params.commentId) {
