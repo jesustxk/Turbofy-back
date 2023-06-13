@@ -18,18 +18,18 @@ const readSpotySong = async (req, res) => {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });
-
+            
             const songs = await songsResponse.json();
             console.log(songs)
 
-            sendJSONresponse(res, 200, songs);
-        } catch (err) {
-            if (err.response.status === 401) {
+            if (songs.error && songs.error.status && songs.error.status === 401) {
                 console.log('Token invalido, se solicita uno nuevo y se reintenta la llamada a la API')
-                await updateToken();
+                await updateToken(req, res);
             } else {
-                sendJSONresponse(res, 404, { 'message': 'Error al tratar de obtener el listado de canciones, inténtelo de nuevo' });
+                sendJSONresponse(res, 200, songs);
             }
+        } catch (err) {
+            sendJSONresponse(res, 404, { 'message': 'Error al tratar de obtener el listado de canciones, inténtelo de nuevo' });
         }
     }
 };
@@ -46,16 +46,14 @@ const updateToken = async (req, res) => {
             'client_secret': process.env.SPOTY_SECRET
         })
     })
-
+    
     const token = await bearerToken.json();
 
     console.log('Nuevo bearer token obtenido');
 
     // Actualizamos el token
     process.env.SPOTY_TOKEN = token.access_token;
-
-    console.log(process.env.SPOTY_TOKEN)
-
+    
     // Recuperamos las canciones
     try {
         console.log('https://api.spotify.com/v1/search?type=track&q=' + req.query.searchParams + '&limit=10')
@@ -66,7 +64,7 @@ const updateToken = async (req, res) => {
                 'Content-Type': 'application/json'
             }
         });
-
+        
         const songs = await songsResponse.json();
         console.log(songs)
 
