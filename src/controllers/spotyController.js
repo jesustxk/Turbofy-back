@@ -11,7 +11,7 @@ const readSpotySong = async (req, res) => {
         await updateToken(req, res);
     } else {
         try {
-            const songsResponse = await fetch('https://api.spotify.com/v1/search?type=track&q=' + req.query.searchParams + '&limit=10', {
+            const songsResponse = await fetch('https://api.spotify.com/v1/search?type=track&q=remaster' + req.query.searchParams + '&limit=10', {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + process.env.SPOTY_TOKEN,

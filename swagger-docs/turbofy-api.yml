@@ -1,0 +1,393 @@
+paths:
+  /songs/create:
+    post:
+      tags: 
+        - songs
+      summary: Crear una nueva canción
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: song
+          schema:
+            $ref: '#/definitions/song'
+      responses:
+        200:
+          description: Canción creada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/song'
+        400:
+          description: La canción ya existe o no se ha podido crear
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+
+  /songs/read:
+    get:
+      tags: 
+        - songs
+      summary: Obtener datos de una canción
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: songId
+          schema:
+            type: string
+          description: Id de la canción a obtener
+          example: 64860d933a9e02c8d22a9090
+      responses:
+        200:
+          description: Datos recuperados con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/song'
+        404:
+          description: Canción no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+        500:
+          description: Error interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+
+  /songs/readAll:
+    get:
+      tags: 
+        - songs
+      summary: Obtener datos de todas las canciones
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Canciones recuperadas con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/song'
+        404:
+          description: No se han encontrado canciones
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+        500:
+          description: Error interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+
+  /songs/search:
+    get:
+      tags: 
+        - songs
+      summary: Buscar canciones a partir del nombre, artista y fecha
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Nombre de canción por la que filtrar
+          example: Trooper
+        - in: query
+          name: artist
+          schema:
+            type: string
+          description: Nombre del artista por el que filtrar
+          example: Iron Maiden
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+          description: Fecha por la que filtrar
+          example: 1983-05-16
+      responses:
+        200:
+          description: Datos recuperados con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/song'
+        404:
+          description: No se han encontrado canciones
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+        500:
+          description: Error interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+
+  /songs/update:
+    post:
+      tags: 
+        - songs
+      summary: Actualizar datos de una canción
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: songId
+          schema:
+            type: string
+          description: Id de la canción a actualizar
+          example: 64860d933a9e02c8d22a9090
+        - in: body
+          name: song
+          schema:
+            $ref: '#/definitions/song'
+          description: Nuevos datos de la canción
+      responses:
+        200:
+          description: Canción actualizada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/song'
+        400:
+          description: Se debe indicar la canción a actualizar
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+        404:
+          description: Canción no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+        500:
+          description: Error interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+
+  /songs/delete:
+    delete:
+      tags: 
+        - songs
+      summary: Eliminar una canción
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: songId
+          schema:
+            type: string
+          description: Id de la canción a eliminar
+          example: 64860d933a9e02c8d22a9090
+      responses:
+        200:
+          description: Canción eliminada
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/song'
+        400:
+          description: Se debe indicar la canción a eliminar
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+        404:
+          description: Canción no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+        500:
+          description: Error interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+
+  /songs/spoty/read:
+    get:
+      tags: 
+        - songs
+      summary: Obtener datos de canciones de Spotify
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: searchParams
+          schema:
+            type: string
+          description: Parámetros de búsqueda de canciones
+          example: track:Trooper_artist:Iron Maiden
+      responses:
+        200:
+          description: Canciones recuperadas con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/song'
+        404:
+          description: Error al tratar de obtener el listado de canciones, inténtelo de nuevo
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+
+  /comments/create:
+    post:
+      tags:
+        - comments
+      summary: Crear un nuevo comentario
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: songId
+          schema:
+            type: string
+          description: Id a la que añadir el comentario
+          example: 64860d933a9e02c8d22a9090
+        - in: body
+          name: comment
+          schema:
+            $ref: '#/definitions/comment'
+          description: Comentario a añadir
+      responses:
+        200:
+          description: Comentario creado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/song'
+        400:
+          description: No ha sido posible crear el comentario
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+        404:
+          description: Canción no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+
+  /comments/delete:
+    delete:
+      tags:
+        - comments
+      summary: Crear un nuevo comentario
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: songId
+          schema:
+            type: string
+          description: Id de la canción cuyo comentario se va a borrar
+          example: 64860d933a9e02c8d22a9090
+        - in: query
+          name: commentId
+          schema:
+            type: string
+          description: Id del comentario a borrar
+          example: 64861d4bc75fcd4acc8da22b
+      responses:
+        200:
+          description: Comentario creado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/song'
+        400:
+          description: Se debe indicar el comentario a borrar
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+        404:
+          description: Comentario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+        500:
+          description: Error interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/error'
+
+definitions:
+  song:
+    type: object
+    properties:
+      name:
+        type: string
+      artist:
+        type: string
+      image:
+        type: string
+      genre:
+        type: string
+      duration:
+        type: number
+      date:
+        type: string
+        format: date
+      geolocation:
+        type: object
+        properties:
+          latitude:
+            type: number
+          longitude:
+            type: number
+      comments:
+        type: array
+        items:
+          $ref: '#/definitions/comment'
+        
+  comment:
+    type: object
+    properties:
+      comment:
+        type: string
+      author:
+        type: string
+      rating:
+        type: number
+      date:
+        type: string
+        format: date
+      geolocation:
+        type: object
+        properties:
+          latitude:
+            type: number
+          longitude:
+            type: number
+
+  error:
+    type: object
+    properties:
+      message:
+        type: string

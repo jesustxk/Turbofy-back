@@ -44,36 +44,28 @@ const addComment = (req, res, song) => {
 const deleteComment = async (req, res) => {
     console.log('DELETE -- deleteComment');
 
-    if (!req.params.songId || req.params.commentId) {
-        sendJSONresponse(res, 404, {"message": "Se debe indicar el comentario a borrar"});
+    if (!req.query.songId || !req.query.commentId) {
+        sendJSONresponse(res, 400, {"message": "Se debe indicar el comentario a borrar" });
     }
-
-    Song.findById(req.params.songId)
-        .select('comments')
-        .then((err, song) => {
-            if (!song) {
-                sendJSONresponse(res, 404, {"message": "Canción no encontrada"});
-            } else if (err) {
-                sendJSONresponse(res, 400, err);
-            }
-
-            if (song.comments && song.comments.length > 0) {
-                if (!song.comments.id(req.params.commentId)) {
-                    sendJSONresponse(res, 404, {"message": "Comentario no encontrado"});
+    
+    try {
+        Song.findById(req.query.songId).then((song) => {
+            console.log(song)
+            if (song !== null && song !== undefined && song.comments.length > 0) {
+                if (!song.comments.id(req.query.commentId)) {
+                    sendJSONresponse(res, 404, {"message": "Comentario no encontrado" });
                 } else {
-                    song.comments.id(req.params.commentId).remove();
-                    song.save((err) => {
-                        if (err) {
-                            sendJSONresponse(res, 404, err);
-                        } else {
-                            sendJSONresponse(res, 200, null);
-                        }
-                    })
+                    song.comments.pull({_id: req.query.commentId });
+
+                    song.save().then((song) => { sendJSONresponse(res, 200, song);});
                 }
             } else {
-                sendJSONresponse(res, 404, {"message": "Sin comentario que borrar"});
+                sendJSONresponse(res, 404, {"message": "Comentario no encontrado" });
             }
-        })
+        });
+    } catch (err) {
+        sendJSONresponse(res, 500, {"message": "Error interno" });
+    }
 };
 
 

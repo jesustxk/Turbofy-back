@@ -39,7 +39,7 @@ const readSong = async (req, res) => {
 
         sendJSONresponse(res, 200, song);
     } catch (err) {
-        sendJSONresponse(res, 500, err);
+        sendJSONresponse(res, 500, { "message": "Error interno" });
     }
 };
 
@@ -57,7 +57,7 @@ const readAllSongs = async (req, res) => {
         
         sendJSONresponse(res, 200, songs);
     } catch (err) {
-        sendJSONresponse(res, 500, err);
+        sendJSONresponse(res, 500, { "message": "Error interno" });
     }
 };
 
@@ -84,7 +84,7 @@ const readSongsByFilter = async (req, res) => {
         }
         sendJSONresponse(res, 200, songs);
     } catch (err) {
-        sendJSONresponse(res, 500, err);
+        sendJSONresponse(res, 500, { "message": "Error interno" });
     }
 }
 
@@ -95,7 +95,7 @@ const updateSong = async (req, res) => {
 
     try {
         if (!req.query.songId) {
-            sendJSONresponse(res, 404, { "message": "Se debe indicar la canción a actualizar" });
+            sendJSONresponse(res, 400, { "message": "Se debe indicar la canción a actualizar" });
         }
 
         const song = await Song.findById(req.query.songId).select('-comments');
@@ -109,11 +109,12 @@ const updateSong = async (req, res) => {
         song.image = req.body.image;
         song.genre = req.body.genre;
         song.duration = req.body.duration;
+        song.date = req.body.date;
         song.geolocation = req.body.geolocation;
 
         song.save().then((song) => { sendJSONresponse(res, 200, song);});
     } catch (err) {
-        sendJSONresponse(res, 500, err);
+        sendJSONresponse(res, 500, { "message": "Error interno" });
     }
 };
 
@@ -123,7 +124,7 @@ const deleteSong = async (req, res) => {
     console.log('DELETE -- deleteSong');
 
     if (!req.query.songId) {
-        sendJSONresponse(res, 404, { 'message': 'Se debe indicar la canción a eliminar' });
+        sendJSONresponse(res, 400, { 'message': 'Se debe indicar la canción a eliminar' });
     }
 
     try {
@@ -136,7 +137,7 @@ const deleteSong = async (req, res) => {
             }
         });
     } catch (err) {
-        sendJSONresponse(res, 500, err);
+        sendJSONresponse(res, 500, { "message": "Error interno" });
     }
         
 };
