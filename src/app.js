@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const express = require('express');
+const cors = require('cors');
 require('./models/database');
 
 // Swagger
@@ -12,6 +13,7 @@ const commentsRouter = require('./routes/commentsRoutes');
 const app = express();
 
 // Rutas
+app.use(cors());
 app.use(express.json());
 app.use('/', [songsRouter, commentsRouter]);
 app.use('/songs', songsRouter);
