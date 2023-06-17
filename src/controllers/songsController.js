@@ -14,6 +14,7 @@ const createSong = async (req, res) => {
     const song = mongoose.model('Song')({
         name: req.body.name,
         artist: req.body.artist,
+        album: req.body.album,
         image: req.body.image,
         genre: req.body.genre,
         duration: req.body.duration,
@@ -106,6 +107,7 @@ const updateSong = async (req, res) => {
 
         song.name = req.body.name;
         song.artist = req.body.artist;
+        song.album = req.body.album;
         song.image = req.body.image;
         song.genre = req.body.genre;
         song.duration = req.body.duration;

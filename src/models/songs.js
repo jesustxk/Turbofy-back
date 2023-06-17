@@ -11,9 +11,10 @@ const commentSchema = new mongoose.Schema({
 const songSchema = new mongoose.Schema({
     name: String,
     artist: String,
-    image: {url: String, imageBase64String: String},
+    album: String,
     genre: String,
     duration: Number,
+    image: {url: String, base64: String},
     date: {type: Date, "default": Date.now},
     geolocation: {latitude: Number, longitude: Number},
     comments: [commentSchema],
