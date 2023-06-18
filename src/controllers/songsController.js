@@ -16,7 +16,6 @@ const createSong = async (req, res) => {
         artist: req.body.artist,
         album: req.body.album,
         image: req.body.image,
-        genre: req.body.genre,
         duration: req.body.duration,
         geolocation: req.body.geolocation
     });
@@ -109,7 +108,6 @@ const updateSong = async (req, res) => {
         song.artist = req.body.artist;
         song.album = req.body.album;
         song.image = req.body.image;
-        song.genre = req.body.genre;
         song.duration = req.body.duration;
         song.date = req.body.date;
         song.geolocation = req.body.geolocation;

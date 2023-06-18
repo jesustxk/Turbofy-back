@@ -19,8 +19,7 @@ const readSpotySong = async (req, res) => {
                 }
             });
             
-            const songs = await songsResponse.json();
-            console.log(songs)
+            const songs = await mapSongs(songsResponse);
 
             if (songs.error && songs.error.status && songs.error.status === 401) {
                 console.log('Token invalido, se solicita uno nuevo y se reintenta la llamada a la API')
@@ -65,14 +64,34 @@ const updateToken = async (req, res) => {
             }
         });
         
-        const songs = await songsResponse.json();
-        console.log(songs)
+        const songs = await mapSongs(songsResponse);
 
         sendJSONresponse(res, 200, songs);
     } catch (error) {
         sendJSONresponse(res, 404, { 'message': 'Error al tratar de obtener el listado de canciones, inténtelo de nuevo' });
     }
 };
+
+const mapSongs = async (songsResponse) => {
+    const spotySongs = await songsResponse.json();
+    
+    let songs = [];
+
+    spotySongs.tracks.items.forEach(spotySong => {
+        const song = {
+            name: spotySong.name,
+            artist: spotySong.artists[0].name,
+            album: spotySong.album.name,
+            duration: spotySong.duration_ms * 0.001,
+            image: { url: spotySong.album.images[0].url },
+            date: spotySong.album.release_date
+        }
+        
+        songs.push(song);
+    });
+
+    return songs
+}
 
 module.exports = {
     readSpotySong

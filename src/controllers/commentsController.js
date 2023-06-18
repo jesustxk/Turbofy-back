@@ -13,7 +13,6 @@ const createComment = async (req, res) => {
     if (req.query.songId) {
         try {
             const song = await Song.findById(req.query.songId);
-            console.log(song);
             
             addComment(req, res, song);
         } catch (err) {
@@ -50,7 +49,6 @@ const deleteComment = async (req, res) => {
     
     try {
         Song.findById(req.query.songId).then((song) => {
-            console.log(song)
             if (song !== null && song !== undefined && song.comments.length > 0) {
                 if (!song.comments.id(req.query.commentId)) {
                     sendJSONresponse(res, 404, {"message": "Comentario no encontrado" });

@@ -12,7 +12,6 @@ const songSchema = new mongoose.Schema({
     name: String,
     artist: String,
     album: String,
-    genre: String,
     duration: Number,
     image: {url: String, base64: String},
     date: {type: Date, "default": Date.now},
