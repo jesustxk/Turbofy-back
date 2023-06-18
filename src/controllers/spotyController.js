@@ -18,7 +18,7 @@ const readSpotySong = async (req, res) => {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });
-            
+
             const songs = await mapSongs(songsResponse);
 
             if (songs.error && songs.error.status && songs.error.status === 401) {
@@ -45,14 +45,14 @@ const updateToken = async (req, res) => {
             'client_secret': process.env.SPOTY_SECRET
         })
     })
-    
+
     const token = await bearerToken.json();
 
     console.log('Nuevo bearer token obtenido');
 
     // Actualizamos el token
     process.env.SPOTY_TOKEN = token.access_token;
-    
+
     // Recuperamos las canciones
     try {
         console.log('https://api.spotify.com/v1/search?type=track&q=' + req.query.searchParams + '&limit=10')
@@ -63,7 +63,7 @@ const updateToken = async (req, res) => {
                 'Content-Type': 'application/json'
             }
         });
-        
+
         const songs = await mapSongs(songsResponse);
 
         sendJSONresponse(res, 200, songs);
@@ -74,7 +74,7 @@ const updateToken = async (req, res) => {
 
 const mapSongs = async (songsResponse) => {
     const spotySongs = await songsResponse.json();
-    
+
     let songs = [];
 
     spotySongs.tracks.items.forEach(spotySong => {
@@ -82,7 +82,7 @@ const mapSongs = async (songsResponse) => {
             name: spotySong.name,
             artist: spotySong.artists[0].name,
             album: spotySong.album.name,
-            duration: spotySong.duration_ms * 0.001,
+            duration: getDurationFromMillis(spotySong.duration_ms),
             image: { url: spotySong.album.images[0].url },
             date: spotySong.album.release_date
         }
@@ -91,6 +91,17 @@ const mapSongs = async (songsResponse) => {
     });
 
     return songs
+}
+
+getDurationFromMillis = (millis) => {
+    var minutes = Math.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000).toFixed(0);
+
+    return (
+        seconds == 60 ?
+            (minutes + 1) + ":00" :
+            minutes + ":" + (seconds < 10 ? "0" : "") + seconds
+    );
 }
 
 module.exports = {
