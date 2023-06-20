@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const express = require('express');
 const cors = require('cors');
 require('./models/database');
+require('dotenv').config();
 
 // Swagger
 const swaggerUi = require('swagger-ui-express');
@@ -23,7 +24,7 @@ const swaggerSpec = {
   definition: {
       openapi: "3.0.0",
       info: { title: "Turbofy API", version: "0.0.1"},
-      servers: [ { url: "http://localhost:8080" }]
+      servers: [ { url: "http://localhost:" + process.env.PORT }]
   },
   apis: [ "swagger-docs/turbofy-api.yml" ]
 };
@@ -42,7 +43,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 });
 
-app.listen(8080, () => {
+app.listen(process.env.PORT, () => {
   console.log('Turbofy backend ejecutándose...');
 });
 
