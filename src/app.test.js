@@ -1,7 +1,12 @@
 const request = require('supertest');
 const { expect } = require('expect');
+const mongoose = require('mongoose');
 
 const app = require('./app');
+
+beforeEach(async () => {
+  await mongoose.connect(process.env.DB_URI);
+});
 
 describe('Spoty controller', () => {
 
@@ -42,8 +47,11 @@ describe('Songs controller', () => {
     expect(response2.status).toBe(200);
 
     const response3 = await request(app).get('/songs/read?songId=' + response._body._id).send();
-    console.log(response3)
     expect(response3).toBeTruthy();
     expect(response3.status).toBe(404);
   });
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
 });
