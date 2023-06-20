@@ -7,7 +7,7 @@
     "start": "node src/app",
     "test": "jest --forceExit",
     "test-jenkins": "jest --reporters=default --reporters=jest-junit --forceExit",
-    "coverage-jenkins": "jest --reporters=default --reporters=jest-junit --coverage --coverageReporters=text --coverageReporters=html --coverageDirectory=./coverage/"
+    "coverage-jenkins": "jest --reporters=default --reporters=jest-junit --coverage --coverageReporters=text --coverageReporters=html --coverageDirectory=./coverage/ --forceExit"
   },
   "jest-junit": {
     "outputDirectory": "./coverage/",
