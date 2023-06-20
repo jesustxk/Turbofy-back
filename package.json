@@ -5,8 +5,8 @@
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app",
-    "test": "jest --runInBand --forceExit",
-    "test-jenkins": "jest --reporters=default --reporters=jest-junit",
+    "test": "jest --forceExit",
+    "test-jenkins": "jest --reporters=default --reporters=jest-junit --forceExit",
     "coverage-jenkins": "jest --reporters=default --reporters=jest-junit --coverage --coverageReporters=text --coverageReporters=html --coverageDirectory=./coverage/"
   },
   "jest-junit": {
