@@ -35,9 +35,9 @@ const readSong = async (req, res) => {
         const song = await Song.findById(req.query.songId);
         if (!song) {
             sendJSONresponse(res, 404, { "message": "Canción no encontrada" });
-        } 
-
-        sendJSONresponse(res, 200, song);
+        } else {
+            sendJSONresponse(res, 200, song);
+        }
     } catch (err) {
         sendJSONresponse(res, 500, { "message": "Error interno" });
     }
@@ -53,9 +53,9 @@ const readAllSongs = async (req, res) => {
 
         if (!songs) {
             sendJSONresponse(res, 404, { "message": "No se han encontrado canciones" });
+        } else {
+            sendJSONresponse(res, 200, songs);
         }
-        
-        sendJSONresponse(res, 200, songs);
     } catch (err) {
         sendJSONresponse(res, 500, { "message": "Error interno" });
     }
@@ -81,8 +81,9 @@ const readSongsByFilter = async (req, res) => {
 
         if (!songs) {
             sendJSONresponse(res, 404, { "message": "No se han encontrado canciones" });
+        } else {
+            sendJSONresponse(res, 200, songs);
         }
-        sendJSONresponse(res, 200, songs);
     } catch (err) {
         sendJSONresponse(res, 500, { "message": "Error interno" });
     }
