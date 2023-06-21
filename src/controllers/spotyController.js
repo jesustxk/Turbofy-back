@@ -28,7 +28,8 @@ const readSpotySong = async (req, res) => {
                 sendJSONresponse(res, 200, songs);
             }
         } catch (err) {
-            sendJSONresponse(res, 404, { 'message': 'Error al tratar de obtener el listado de canciones, inténtelo de nuevo' });
+            console.log('Error al tratar de obtener el listado de canciones, se reintenta tras recalcular el token');
+            await updateToken(req, res);
         }
     }
 };
